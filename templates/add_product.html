@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+    <title>{% trans "CRM | Mahsulot qo'shish" %}</title>
+{% endblock title %}
+{% block css %}
+    <!-- Vendors Style-->
+    <link rel="stylesheet" href="{% static 'crm/main/css/vendors_css.css' %}">
+
+    <!-- Style-->
+    <link rel="stylesheet" href="{% static 'crm/main/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'crm/main/css/skin_color.css' %}">
+{% endblock css %}
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+        <div class="row" style="justify-content: center">
+            <div class="col-6">
+                <div class="box">
+
+                    <div class="box-header with-border">
+                        <h4 class="box-title">{% trans "Yangi mahsulot qo'shish" %}</h4>
+                    </div>
+                    <form action="{% url 'add_product' %}" method="post">
+                        {% csrf_token %}
+                        <div class="box-body">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>{% trans "Mahsulot nomi" %}</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>{% trans "Narxi" %}</label>
+                                <input type="number" name="price" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>{% trans "Izoh" %}</label>
+                                <textarea name="comment" class="form-control" rows="10"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary float-right" style="margin: 20px">{% trans "Saqlash" %}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </section>
+{% endblock content %}
+{% block js %}
+    <script src="{% static 'crm/main/js/vendors.min.js' %}"></script>
+    <script src="{% static 'crm/assets/icons/feather-icons/feather.min.js' %}"></script>    <!-- Sunny Admin App -->
+    <script src="{% static 'crm/main/js/template.js' %}"></script>
+
+{% endblock js %}

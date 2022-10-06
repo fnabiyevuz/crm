@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+    <title>{% trans "CRM | Qarzdorlik" %}</title>
+{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'crm/main/css/vendors_css.css' %}">
+    <link rel="stylesheet" href="{% static 'crm/main/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'crm/main/css/skin_color.css' %}">
+{% endblock css %}
+{% block content %}
+    <section class="content">
+
+        <div class="row">
+            <div class="col-6">
+                {% if messages %}
+                    {% for message in messages %}
+                        <span style="color: green">{{ message }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="col-6">
+                <a href="{% url 'adddebtor' %}" class="btn btn-rounded btn-success float-right"
+                   style="margin-bottom: 10px;">{% trans "Qo'shish" %}</a>
+            </div>
+            <div class="col-12">
+                <div class="box-body" style="padding: 0">
+                    <div class="tab-content">
+                        <div class="col-12" style="padding: 0">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div class="table-responsive">
+                                        <table id="example1" class="table table-bordered table-striped">
+                                            <thead>
+                                            <tr class="text-center">
+                                                <th>№</th>
+                                                <th>{% trans "Familiya" %}</th>
+                                                <th>{% trans "Ism" %}</th>
+                                                <th>{% trans "Tug'ilgan sana" %}</th>
+                                                <th>{% trans "Tuman" %}</th>
+                                                <th>{% trans "Telefon" %}</th>
+                                                <th>{% trans "Qarzi" %}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for t in debtors %}
+                                                <tr class="text-center">
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>
+                                                        <a href="{% url 'debthistory' %}?id={{ t.id }}">{{ t.surname }}</a>
+                                                    </td>
+                                                    <td><a href="{% url 'debthistory' %}?id={{ t.id }}">{{ t.name }}</a>
+                                                    </td>
+                                                    <td>{{ t.birthday|date:'d.m.Y' }}</td>
+                                                    <td>{{ t.district }}</td>
+                                                    <td>{{ t.phone }}</td>
+                                                    <td>{{ t.debt }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'crm/main/js/vendors.min.js' %}"></script>
+    <script src="{% static 'crm/assets/icons/feather-icons/feather.min.js' %}"></script>
+    <script src="{% static 'crm/main/js/template.js' %}"></script>
+    <script src="{% static 'crm/assets/vendor_components/datatable/datatables.min.js' %}"></script>
+    <script src="{% static 'crm/main/js/pages/data-table.js' %}"></script>
+{% endblock js %}

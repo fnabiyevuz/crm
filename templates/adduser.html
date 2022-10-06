@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+    <title>{% trans "CRM | Mijoz qo'shish" %}</title>
+{% endblock title %}
+{% block css %}
+    <!-- Vendors Style-->
+    <link rel="stylesheet" href="{% static 'crm/main/css/vendors_css.css' %}">
+
+    <!-- Style-->
+    <link rel="stylesheet" href="{% static 'crm/main/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'crm/main/css/skin_color.css' %}">
+{% endblock css %}
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+        <div class="row">
+            <div class="col-6">
+                {% if messages %}
+                    {% for message in messages %}
+                        <span style="color: green">{{ message }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="col-12">
+                <div class="box">
+
+                    <div class="box-header with-border">
+                        <h4 class="box-title">{% trans "Ro'yxatdan o'tkazish" %}</h4>
+                    </div>
+                    <form action="{% url 'adduser' %}" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <label>{% trans "Familiya" %}</label>
+                                        <input type="text" name="fam" class="form-control" placeholder="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{% trans "Ism" %}</label>
+                                        <input type="text" name="ism" class="form-control" placeholder="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{% trans "Telefon" %}</label><span style="color: green; float: right">{% trans "Namuna" %}: 998901234567</span>
+                                        <input type="text" name="tel" class="form-control" placeholder="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{% trans "Qo'shimcha telefon" %}</label>
+                                        <input type="text" name="tel2" class="form-control" placeholder="">
+                                    </div>
+                                    {% if user.company.type == "B2B" %}
+                                        <div class="form-group">
+                                            <label>{% trans "Tashkilot" %}</label>
+                                            <input type="text" name="com" class="form-control" placeholder="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{% trans "Tashkilot manzili" %}</label>
+                                            <input type="text" name="comadd" class="form-control" placeholder="">
+                                        </div>
+                                    {% endif %}
+
+                                    <div class="form-group">
+                                        <label>{% trans "Mijoz qiymati" %}</label>
+                                        <input type="number" name="price" class="form-control" placeholder="">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <label>ABC</label>
+                                        <select name="abc" required class="form-control">
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                            <option value="C">C</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>{% trans "Mijoz kelgan joy" %}</label>
+                                        <input type="text" name="join_from" class="form-control" placeholder="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Viloyat</label>
+                                        <select class="form-control select2" onchange="getRegion()" id="region"
+                                                name="region" style="width: 100%;">
+                                            <option value="1">{% trans "Viloyatni tanlang" %}</option>
+                                            {% for t in region %}
+                                                <option value="{{ t.id }}">{{ t.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{% trans "Shahar/Tuman" %}</label>
+                                        <select class="form-control select2" id="district" name="district"
+                                                style="width: 100%;">
+                                            <option value="">{% trans "Viloyatni tanlang" %}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{% trans "Tug'ilgan kun" %} </label>
+                                        <input class="form-control" required type="date" name="birth">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{% trans "Holati" %}</label>
+                                        <select class="form-control select2" name="lead_pole"
+                                                style="width: 100%;">
+                                            {% for lead_pole in lead_poles %}
+                                                <option value="{{ lead_pole.id }}">{{ lead_pole.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-rounded btn-success pull-right"
+                                            style="margin-bottom: 10px">{% trans "Saqlash" %}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.box -->
+            </div>
+            <!--/.col (left) -->
+
+        </div>
+        <!-- /.row -->
+
+    </section>
+    <!-- /.content -->
+{% endblock content %}
+{% block js %}
+
+    <!-- Vendor JS -->
+    <script src="{% static 'crm/main/js/vendors.min.js' %}"></script>
+    <script src="{% static 'crm/assets/icons/feather-icons/feather.min.js' %}"></script>    <!-- Sunny Admin App -->
+    <script src="{% static 'crm/main/js/template.js' %}"></script>
+    <script>
+        function getRegion() {
+            var id = document.getElementById("region").value;
+            console.log(id)
+            $.ajax({
+                type: 'get',
+                url: `/getregion/?id=` + String(id),
+                success: function (r) {
+                    $("#district").empty();
+                    for (d of r['district']) {
+                        var op = `<option value="` + d.id + `">` + d.name + `</option>`
+                        $('#district').append(op);
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+        }
+    </script>
+{% endblock js %}

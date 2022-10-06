@@ -1,0 +1,4 @@
+
+python manage.py makemessages -l <en> --ignore=venv/* --ignore=static/* --ignore=migrations/*
+
+django-admin compilemessages --use-fuzzy --ignore=venv/* --ignore=static/* --ignore=migrations/*
